@@ -1,40 +1,60 @@
 package com.jcb.enunciate.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Handler;
 
 import com.jcb.enunciate.R;
 
 
-public class EnSplashActivity extends ActionBarActivity {
+public class EnSplashActivity extends Activity {
+
+    private final int SPLASH_TIME = 1500;
+    private Handler mHandler = null;
+
+    private Runnable SplashRunnable = new Runnable() {
+        @Override
+        public void run() {
+            callTeamActivity();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_en_splash);
+
+        initialiseValues();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_en_splash, menu);
-        return true;
+    /**
+     * Initialising handles used for starting next activity
+     */
+    private void initialiseValues() {
+
+        mHandler = new Handler();
+
+        continueLaunch(true);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void continueLaunch(boolean isDelayed) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (isDelayed) {
+            mHandler.postDelayed(SplashRunnable, SPLASH_TIME);
+        } else {
+            mHandler.post(SplashRunnable);
         }
-
-        return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Calling next activity
+     */
+    private void callTeamActivity() {
+
+        Intent launchIntent = new Intent(EnSplashActivity.this, EnMainActivity.class);
+        startActivity(launchIntent);
+        finish();
+    }
+
 }
